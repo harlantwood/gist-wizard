@@ -25,11 +25,10 @@ module GistWizard
         puts "* page #{page} *"
 
         gists.each do |gist|
-        #[gists.first].each do |gist|
           id = gist['id']
           gist_dir = File.join(gists_by_id_dir, id)
           if Dir.exists?(File.join(gist_dir, '.git'))
-            git_status = run("cd #{gist_dir} && git status --porcelain", :return_result => true, :quiet => true)
+            git_status = run "cd #{gist_dir} && git status --porcelain", :return_result => true, :quiet => true
             if git_status.blank?
               run "cd #{gist_dir} && git pull --quiet"
             else
@@ -42,7 +41,7 @@ module GistWizard
             run "git clone --quiet #{git_url} #{gist_dir}"
           end
 
-          name = gist['description'].try(:slug).presence.try(:shellescape).presence || "gist-#{id}"
+          name = gist['description'].try(:slug).presence.try(:shellescape) || "gist-#{id}"
           run "ln -sFh #{File.join gists_by_id_dir, id} #{File.join gists_by_name_dir, name}"
         end
       end
