@@ -1,7 +1,7 @@
 Gist Wizard
 ===========
 
-Download all gists for a given user, storing them in a folder named after gist id.
+Download all public and private gists for a given user, storing them in a folder named after the gist ID.
 Symlink a friendly name to this folder if known.
 
 Usage:
@@ -23,7 +23,7 @@ After running with this config, the directory `/Users/joe/gists/by_id` might con
 And the directory `/Users/joe/gists/by_name`, two symlinks to these folders:
 
     Nahko-Bear-(Medicine-for-the-People)-ღ-Aloha-Ke-Akua-ღ@ -> /Users/joe/gists/by_id/4181294
-    License-from-D3-by-Michael-Bostock----http:--mbostock.github.com-d3- -> /Users/harlan/HKB/gists/by_id/1681339
+    License-from-D3-by-Michael-Bostock----http:--mbostock.github.com-d3 -> /Users/harlan/HKB/gists/by_id/1681339
 
 Notes
 -----
