@@ -1,5 +1,4 @@
 require 'thor'
-require 'github_api'
 require 'rest_client'
 require 'superstring'
 require 'easy_shell'
