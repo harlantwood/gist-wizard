@@ -43,8 +43,7 @@ module GistWizard
           end
 
           name = gist['description'].try(:slug).presence.try(:shellescape).presence || "gist-#{id}"
-          puts "name: #{name.inspect}"
-          run "ln -sFhv #{File.join gists_by_id_dir, id} #{File.join gists_by_name_dir, name}"
+          run "ln -sFh #{File.join gists_by_id_dir, id} #{File.join gists_by_name_dir, name}"
         end
       end
     end
