@@ -17,8 +17,8 @@ module GistWizard
       gists_by_name_dir = ENV['GISTS_BY_NAME_DIR'] or raise("Please set env var GISTS_BY_NAME_DIR")
       gists_by_id_dir = File.expand_path gists_by_id_dir
       gists_by_name_dir = File.expand_path gists_by_name_dir
-      run "mkdir -p #{gists_by_id_dir}"
-      run "mkdir -p #{gists_by_name_dir}"
+      run "mkdir -p #{gists_by_id_dir}", :quiet => true
+      run "mkdir -p #{gists_by_name_dir}", :quiet => true
 
       page = 0
       while (gists = get_gists(page+=1); gists.present?)
@@ -30,9 +30,10 @@ module GistWizard
           if Dir.exists?(File.join(gist_dir, '.git'))
             git_status = run "cd #{gist_dir} && git status --porcelain", :return_result => true, :quiet => true
             if git_status.blank?
-              run "cd #{gist_dir} && git pull --quiet"
+              run "cd #{gist_dir} && git pull --quiet", :quiet => true
             else
-              puts "Aborting: non-empty git status in #{gist_dir.inspect}:"
+              puts "Aborting: non-empty git status in:"
+              puts gist_dir
               puts git_status
               exit 1
             end
@@ -42,7 +43,7 @@ module GistWizard
           end
 
           name = gist['description'].try(:slug).presence.try(:shellescape) || "gist-#{id}"
-          run "ln -sFh #{File.join gists_by_id_dir, id} #{File.join gists_by_name_dir, name}"
+          run "ln -sFh #{File.join gists_by_id_dir, id} #{File.join gists_by_name_dir, name}", :quiet => true
         end
       end
     end
