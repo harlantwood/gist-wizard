@@ -4,7 +4,7 @@ gem 'foreman'
 gem 'thor'
 gem 'github_api'
 gem 'rest-client'
-gem 'easy_shell', :git => 'git://github.com/harlantwood/easy_shell.git'
+gem 'easy_shell'
 gem 'superstring'
 gem 'json'
                
