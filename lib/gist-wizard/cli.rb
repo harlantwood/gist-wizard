@@ -42,17 +42,22 @@ module GistWizard
       gist_ids.each do |id|
         get_or_update_gist id
       end
-
-      reveal_html = Dir[File.join @gists_by_id_dir, '*', '*.md'].to_a.map do |markdown_path| 
-        %{<section data-markdown="#{markdown_path}" } + 
-        'data-separator="^\n\n\n" data-vertical="^\n\n"></section>'
+                    
+      markdown_paths = Dir[File.join @gists_by_id_dir_relative, '*', '*.md']
+      reveal_html = markdown_paths.map do |markdown_path| 
+        %{<section } +
+        %{data-markdown="#{markdown_path}" } +
+        'data-separator="^\n\n\n" data-vertical="^\n\n"' +
+        %{></section>} +
+        ''
       end                 
       puts reveal_html
     end
 
     no_tasks do         
       def mkdirs
-        @gists_by_id_dir = ENV['GISTS_BY_ID_DIR'] || File.join(Dir.pwd, 'gists', 'by_id')
+        @gists_by_id_dir_relative = File.join('gists', 'by_id')
+        @gists_by_id_dir = ENV['GISTS_BY_ID_DIR'] || File.join(Dir.pwd, @gists_by_id_dir_relative)
         @gists_by_name_dir = ENV['GISTS_BY_NAME_DIR'] || File.join(Dir.pwd, 'gists', 'by_name')
         @gists_by_id_dir = File.expand_path @gists_by_id_dir
         @gists_by_name_dir = File.expand_path @gists_by_name_dir
