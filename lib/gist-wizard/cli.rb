@@ -46,6 +46,44 @@ module GistWizard
       end
     end
 
+    desc 'reveal FILE', 'Sync down gists listed in FILE, and print HTML for a Reveal.js slideshow'
+    def reveal(depends_path)
+
+      gists_by_id_dir = ENV['GISTS_BY_ID_DIR'] || File.join(Dir.pwd, 'gists', 'by_id')
+      gists_by_name_dir = ENV['GISTS_BY_NAME_DIR'] || File.join(Dir.pwd, 'gists', 'by_name')
+      gists_by_id_dir = File.expand_path gists_by_id_dir
+      gists_by_name_dir = File.expand_path gists_by_name_dir
+      run "mkdir -p #{gists_by_id_dir}", :quiet => true
+      run "mkdir -p #{gists_by_name_dir}", :quiet => true
+                                                                   
+      depends_data = File.read(File.expand_path depends_path)
+      gist_ids = depends_data.scan(%r{https://gist.github.com/[^/]+/([0-9a-f]+)}) +
+        depends_data.scan(%r{[/"']gists/([0-9a-f]+)/})
+      gist_ids.flatten!.uniq!
+      
+      gist_ids.each do |id|
+        gist_dir = File.join(gists_by_id_dir, id)
+        if Dir.exists?(File.join(gist_dir, '.git'))
+          git_status = run "cd #{gist_dir} && git status --porcelain", :quiet => true
+          if git_status.blank?
+            run "cd #{gist_dir} && git pull --quiet", :quiet => true
+          else
+            warn "non-empty git status in:"
+            puts gist_dir
+          end
+        else
+          git_url = "git@gist.github.com:#{id}.git"
+          run "git clone --quiet #{git_url} #{gist_dir}"
+        end
+      end
+
+      reveal_html = Dir[File.join gists_by_id_dir, '*', '*.md'].to_a.map do |markdown_path| 
+        %{<section data-markdown="#{markdown_path}" } + 
+        'data-separator="^\n\n\n" data-vertical="^\n\n"></section>'
+      end                 
+      puts reveal_html
+    end
+
     no_tasks do
       def get_gists page
         json = RestClient.get "https://#{@user}:#{@password}@api.github.com/gists?page=#{page}"
