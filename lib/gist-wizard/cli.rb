@@ -30,8 +30,8 @@ module GistWizard
       end
     end
 
-    desc 'reveal FILE', 'Sync down gists listed in FILE, and print HTML for a Reveal.js slideshow'
-    def reveal(depends_path)
+    desc 'reveal [FILE]', 'Sync down gists listed in FILE, and print HTML for a Reveal.js slideshow'
+    def reveal(depends_path='index.html')
       mkdirs
                                                                    
       depends_data = File.read(File.expand_path depends_path)

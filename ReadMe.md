@@ -21,24 +21,24 @@ Will download all public and private gists for the user given by the
 environment variables `GITHUB_USER` and `GITHUB_PASS`.
 
 Gists will be stored in 
-`gists/by_id/<Gist ID>`.
+`./gists/by_id/<Gist ID>`.
 
 A "friendly" name will be generated if possible, and a symlink created in 
-`gists/by_name/<friendly name>`.
+`./gists/by_name/<friendly name>`.
   
 Both paths are relative the current working directory.
 
 ### For Example
 
-After running from the home director, the directory `~/gists/by_id` might contain two folders:
+When running from the home directory, directories will be created for each gist, e.g.:
 
-    ~/681339/
-    ~/4181294/
+    ~/gists/by_id/681339/
+    ~/gists/by_id/4181294/
 
-And the directory `~/gists/by_name`, two symlinks to these folders:
+And also "friendly" symlinks to these folders:
 
-    Nahko-Bear-(Medicine-for-the-People)-ღ-Aloha-Ke-Akua-ღ@ -> ~/gists/by_id/4181294
-    License-from-D3-by-Michael-Bostock----http:--mbostock.github.com-d3 -> ~/gists/by_id/1681339
+    ~/gists/by_name/Nahko-Bear-(Medicine-for-the-People)-ღ-Aloha-Ke-Akua-ღ@ -> ~/gists/by_id/681339
+    ~/gists/by_name/sha512-as-140-character-node-address@ -> ~/gists/by_id/4181294
     
 Generate HTML for a Reveal.js slideshow
 ---------------------------------------
@@ -46,8 +46,11 @@ Generate HTML for a Reveal.js slideshow
     gwiz reveal FILE
 
 Where file is a filename or relative path to a file containing references to gists.
+Note that this may be the Reveal.js slideshow itself; to facilitate this, the default
+FILE is `index.html`.
 
-The gists listed in the file will be downloaded into `gists/by_id/`, and sample Reveal.js HTML will be written to STDOUT, eg:
+The gists listed in the file will be downloaded into `gists/by_id/`, 
+and sample HTML for use in a Reveal.js slide deck will be written to STDOUT, eg:
                                                                                                    
     <section data-markdown="gists/by_id/0771ce3b37a74dad4588/An-architecture-for-a-distributed-autonomous-node-network.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
     <section data-markdown="gists/by_id/86fa6f17e60229b6f636/Address Spaces of Hashes and Other Names.md" data-separator="^\n\n\n" data-vertical="^\n\n"></section>
