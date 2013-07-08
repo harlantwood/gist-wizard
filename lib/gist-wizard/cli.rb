@@ -22,20 +22,18 @@ module GistWizard
 
       page = 0
       while (gists = get_gists(page+=1); gists.present?)
-        puts "* page #{page} *"
+        puts "* Gist group #{page}..."
 
         gists.each do |gist|
           id = gist['id']
           gist_dir = File.join(gists_by_id_dir, id)
           if Dir.exists?(File.join(gist_dir, '.git'))
-            git_status = run "cd #{gist_dir} && git status --porcelain", :return_result => true, :quiet => true
+            git_status = run "cd #{gist_dir} && git status --porcelain", :quiet => true
             if git_status.blank?
               run "cd #{gist_dir} && git pull --quiet", :quiet => true
             else
-              puts "Aborting: non-empty git status in:"
+              warn "non-empty git status in:"
               puts gist_dir
-              puts git_status
-              exit 1
             end
           else
             git_url = "git@gist.github.com:#{id}.git"
@@ -52,6 +50,14 @@ module GistWizard
       def get_gists page
         json = RestClient.get "https://#{@user}:#{@password}@api.github.com/gists?page=#{page}"
         JSON.parse json
+      end   
+      
+      def warn(warning)              
+        warning = "WARNING: #{warning}"
+        splats = [warning.to_s.size, 80].max
+        puts '*' * splats
+        puts warning
+        puts '*' * splats
       end
     end
 
