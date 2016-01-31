@@ -4,6 +4,9 @@ require 'superstring'
 require 'easy_shell'
 require 'awesome_print' rescue nil
 require 'json'
+require 'dotenv'
+
+Dotenv.load
 
 module GistWizard
 
@@ -12,7 +15,7 @@ module GistWizard
     desc :down, 'Sync gists down from a github account'
     def down
       @user = ENV['GITHUB_USER'] or raise("Please set env var GITHUB_USER")
-      @password = ENV['GITHUB_PASS'] or raise("Please set env var GITHUB_PASS")
+      @password = ENV['OAUTH_TOKEN'] or raise("Please set env var OAUTH_TOKEN (If you need an OAuth token, visit: https://github.com/settings/tokens/new)")
       mkdirs
 
       page = 0
