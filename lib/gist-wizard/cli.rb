@@ -22,7 +22,7 @@ module GistWizard
         gists.each do |gist|
           id = gist['id']
           get_or_update_gist id
-                 
+
           # add a friendly name as a symlink to the gist id dir
           name = gist['description'].try(:slug).presence.try(:shellescape) || "gist-#{id}"
           run "ln -sFh #{File.join @gists_by_id_dir, id} #{File.join @gists_by_name_dir, name}", :quiet => true
@@ -33,28 +33,28 @@ module GistWizard
     desc 'reveal [FILE]', 'Sync down gists listed in FILE, and print HTML for a Reveal.js slideshow'
     def reveal(depends_path='index.html')
       mkdirs
-                                                                   
+
       depends_data = File.read(File.expand_path depends_path)
       gist_ids = depends_data.scan(%r{https://gist.github.com/[^/]+/([0-9a-f]+)}) +
         depends_data.scan(%r{[/"']gists/([0-9a-f]+)/})
       gist_ids.flatten!.uniq!
-      
+
       gist_ids.each do |id|
         get_or_update_gist id
       end
-                    
+
       markdown_paths = Dir[File.join @gists_by_id_dir_relative, '*', '*.md']
-      reveal_html = markdown_paths.map do |markdown_path| 
+      reveal_html = markdown_paths.map do |markdown_path|
         %{<section } +
         %{data-markdown="#{markdown_path}" } +
         'data-separator="^\n\n\n" data-vertical="^\n\n"' +
         %{></section>} +
         ''
-      end                 
+      end
       puts reveal_html
     end
 
-    no_tasks do         
+    no_tasks do
       def mkdirs
         @gists_by_id_dir_relative = File.join('gists', 'by_id')
         @gists_by_id_dir = ENV['GISTS_BY_ID_DIR'] || File.join(Dir.pwd, @gists_by_id_dir_relative)
@@ -80,13 +80,13 @@ module GistWizard
           run "git clone --quiet #{git_url} #{gist_dir}"
         end
       end
-      
+
       def get_gists page
         json = RestClient.get "https://#{@user}:#{@password}@api.github.com/gists?page=#{page}"
         JSON.parse json
-      end   
-      
-      def warn(warning)              
+      end
+
+      def warn(warning)
         warning = "WARNING: #{warning}"
         splats = [warning.to_s.size, 80].max
         puts '*' * splats
