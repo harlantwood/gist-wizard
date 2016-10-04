@@ -14,8 +14,8 @@ module GistWizard
 
     desc :down, 'Sync gists down from a github account'
     def down
-      @user = ENV['GITHUB_USER'] or raise("Please set env var GITHUB_USER")
-      @password = ENV['OAUTH_TOKEN'] or raise("Please set env var OAUTH_TOKEN (If you need an OAuth token, visit: https://github.com/settings/tokens/new)")
+      @user = ENV['GWIZ_USER'] or raise("Please set env var GWIZ_USER")
+      @password = ENV['GWIZ_OAUTH_TOKEN'] or raise("Please set env var GWIZ_OAUTH_TOKEN (If you need an OAuth token, visit: https://github.com/settings/tokens/new)")
       mkdirs
 
       page = 0
